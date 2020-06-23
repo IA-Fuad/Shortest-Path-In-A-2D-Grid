@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="gridInput">
+      <label for="row">Input Row</label>
+      <input type="number" id="row" />
+      <br>
+      <label for="col">Input Column</label>
+      <input type="number" id="col" />
+      <br>
+      <button id="submitGrid" class="btn btn-success">Generate Grid</button>
+    </div>
+
+    <div id="play">
+      <h4 id="instruction"></h4>
+      <div id="grid" class="flex-box"></div>
+      <br />
+
+      <button id="sg">Enable Selecting Start and Goal</button>
+    </div>
+    
+
+    <script src="code.js"></script>
+  </body>
+</html>

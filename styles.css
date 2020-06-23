@@ -1,0 +1,13 @@
+.flex-box {
+  display: flex;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.gridInput {
+  margin: 10px;
+}
+
+#row,  #col, #submitGrid{
+  margin: 10px;
+}
