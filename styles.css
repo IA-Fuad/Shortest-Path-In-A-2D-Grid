@@ -11,3 +11,13 @@
 #row,  #col, #submitGrid{
   margin: 10px;
 }
+
+#play {
+  text-align: center;
+}
+/* #findPath, #sg, #instruction {
+  margin: 10px 40%;
+  padding: 2px 50px;
+  width: 300px;
+  text-align: left;
+} */

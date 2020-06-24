@@ -1,14 +1,17 @@
 let row, col;
 let checkClick = false;
+let selectPath = -1;
+let start, goal;
 
 document.querySelector("#submitGrid").addEventListener("click", generateGrid);
 
-//document.querySelector("#submitPath").addEventListener("click", findPath);
+document.querySelector("#findPath").addEventListener("click", findPath);
 
 document.querySelector("#sg").addEventListener("click", startAndGoal);
 
 function generateGrid() {
   let grid = document.getElementById("grid");
+  selectPath = -1, start = "", goal = "";
 
   if (grid.innerHTML != "") {
     grid.innerHTML = "";
@@ -42,27 +45,37 @@ function generateGrid() {
 }
 
 function changeColor() {
-  let xx = (row - 1) + " " + (col - 1);
-  if (this.id === '0 0' || this.id === xx){
+  if (this.id === start || this.id === goal || selectPath == -1) {
     return;
   }
-  this["style"]["background"] = "green";
-  console.log(this.id);
-  if (checkClick == false){
-    checkClick = true;
+  if (selectPath == 1){
+    this["style"]["background"] = "yellow";
+    start = this.id;
+    selectPath++;
   }
-  else {
-    checkClick = false;
+  else if (selectPath == 2){
+    this["style"]["background"] = "blue";
+    goal = this.id;
+    selectPath = 0;
+    alert("Now you can draw obstacle on the grid");
+  }
+  else{
+    this["style"]["background"] = "green";
+    console.log(this.id);
+    if (checkClick == false) {
+      checkClick = true;
+    }
+    else {
+      checkClick = false;
+    }
   }
 }
 
 function changeColor2() {
-  let xx = (row - 1) + " " + (col - 1);
-  if (checkClick === false || this.id === '0 0' || this.id === xx){
+  if (selectPath != 0 || checkClick === false || this.id === start || this.id === goal){
     return;
   }
   this["style"]["background"] = "green";
-  console.log(this.id);
 }
 
 function stopChanging() {
@@ -77,14 +90,22 @@ let dx = [0, 0, 1, -1];
 let dy = [1, -1, 0, 0];
 
 async function findPath() {
+  if (start == "" || goal == ""){
+    return;
+  }
   let queue = [];
   let parent = {};
   let vis = [];
-  queue.push([0, 0, 0]);
-  parent[0+" "+0] = 0+" "+0;
-  vis[[0, 0]] = true;
+  let s = start.split(" ");
+  let g = goal.split(" ");
+  let si = parseInt(s[0]), sj = parseInt(s[1]);
+  let gi = parseInt(g[0]), gj = parseInt(g[1]);
+  queue.push([si, sj, 0]);
+  parent[si+" "+sj] = si+" "+sj;
+  vis[[si, sj]] = true;
 
-  while (queue.length > 0){
+  let flag = true;
+  while (queue.length > 0 && flag){
     let u = queue.shift();
     for (let k=0; k<4; k++){
       let i = u[0] + dx[k];
@@ -96,28 +117,32 @@ async function findPath() {
         continue;
       }
 
-      document.getElementById(cellID).style.background = 'white';
-
       queue.push([i, j, u[2]+1]);
       parent[cellID] = u[0] + " " + u[1];
       vis[[i, j]] = true;
 
-      if (i == row-1 && j == col-1){
-        
+      if (i == gi && j == gj){
+        console.log('hello');
+        flag = false;
         break;
       }
+
+      document.getElementById(cellID).style.background = 'white';
     }
 
     await sleep(10);
   }
 
-  let cellID = (row-1) + " " + (col-1);
-  console.log(parent[cellID], parent[0+" "+0]);
-  while (parent[cellID] != cellID){
-    document.getElementById(cellID).style.background = 'orange';
+  if (flag){
+    alert("No path found!");
+  }
+  let cellID = goal;
+  while (true){
     cellID = parent[cellID];
-    console.log(cellID, parent[cellID]);
-   // console.log(parent[cellID]);
+    if (cellID == start){
+      break;
+    }
+    document.getElementById(cellID).style.background = 'orange';
   }
 }
 
@@ -125,5 +150,5 @@ async function findPath() {
 function startAndGoal() {
   alert("Click on any two free cells to select Start and Goal. First clicked cell will be Start and Second clicked cell will be Goal.");
 
-  findPath();
+  selectPath = 1;
 }
